@@ -18,7 +18,7 @@ contract CovidCondition is IAzuranceCondition, FunctionsClient, ConfirmedOwner {
     // Check to get the router address for your supported network https://docs.chain.link/chainlink-functions/supported-networks
     address router = 0xb83E47C2bC239B3bf370bc41e1459A34b41238D0;
 
-    // donID - Hardcoded for Fuji
+    // donID - Hardcoded for sepolia
     // Check to get the donID for your supported network https://docs.chain.link/chainlink-functions/supported-networks
     bytes32 donID =
         0x66756e2d657468657265756d2d7365706f6c69612d3100000000000000000000;
