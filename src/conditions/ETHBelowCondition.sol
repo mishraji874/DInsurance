@@ -15,7 +15,7 @@ contract ETHBelowCondition is IAzuranceCondition {
 
     function checkUnlockClaim(address target) external override {
         // eth price below 100 usd
-        if(dataFeed.isBelow100USD()) {
+        if (dataFeed.isBelow100USD()) {
             IAzurancePool(target).unlockClaim();
         }
     }

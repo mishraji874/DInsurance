@@ -6,22 +6,15 @@ interface IFUJIMessenger {
 
     function owner() external view returns (address);
 
-    function sendMessagePayLINK(
-        uint64 _destinationChainSelector,
-        address _receiver,
-        string memory _text
-    ) external returns (bytes32 messageId);
+    function sendMessagePayLINK(uint64 _destinationChainSelector, address _receiver, string memory _text)
+        external
+        returns (bytes32 messageId);
 
     function withdraw(address _beneficiary) external;
 
     function withdrawToken(address _beneficiary, address _token) external;
 
-    event MessageReceived(
-        bytes32 indexed messageId,
-        uint64 indexed sourceChainSelector,
-        address sender,
-        string text
-    );
+    event MessageReceived(bytes32 indexed messageId, uint64 indexed sourceChainSelector, address sender, string text);
 
     event MessageSent(
         bytes32 indexed messageId,
@@ -34,6 +27,7 @@ interface IFUJIMessenger {
 
     event OwnershipTransferRequested(address indexed from, address indexed to);
     event OwnershipTransferred(address indexed from, address indexed to);
+
     error DestinationChainNotAllowlisted(uint64 destinationChainSelector);
     error FailedToWithdrawEth(address owner, address target, uint256 value);
     error InvalidRouter(address router);

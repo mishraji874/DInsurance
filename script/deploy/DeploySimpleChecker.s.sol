@@ -7,7 +7,6 @@ import "../../src/conditions/SimpleCondition.sol";
 import "../../src/AzurancePool.sol";
 
 contract DeploySimpleCondition is Script {
-
     function run() public {
         // uint256 deployerPrivateKey = vm.envUint("PRIVATE_KEY");
         vm.startBroadcast();
@@ -16,5 +15,4 @@ contract DeploySimpleCondition is Script {
 
         vm.stopBroadcast();
     }
-
 }

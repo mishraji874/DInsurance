@@ -15,7 +15,7 @@ contract ETHDiffCondition is IAzuranceCondition {
 
     function checkUnlockClaim(address target) external override {
         // eth diff -50%
-        if(dataFeed.pricediff() < -50) {
+        if (dataFeed.pricediff() < -50) {
             IAzurancePool(target).unlockClaim();
         }
     }

@@ -5,7 +5,6 @@ import "../interfaces/IAzuranceCondition.sol";
 import "../interfaces/IAzurancePool.sol";
 
 contract SimpleCondition is IAzuranceCondition {
-
     function checkUnlockClaim(address target) external override {
         IAzurancePool(target).unlockClaim();
     }

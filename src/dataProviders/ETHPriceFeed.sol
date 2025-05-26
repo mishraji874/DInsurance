@@ -12,14 +12,12 @@ contract ETHPriceFeed {
 
     constructor() {
         // fixed aggregator in sepolia chain
-        dataFeed = AggregatorV3Interface(
-            0x694AA1769357215DE4FAC081bf1f309aDC325306
-        );
+        dataFeed = AggregatorV3Interface(0x694AA1769357215DE4FAC081bf1f309aDC325306);
 
         (
             ,
             /* uint80 roundID */
-            int answer,
+            int256 answer,
             /*uint startedAt*/
             /*uint timeStamp*/
             /*uint80 answeredInRound*/
@@ -34,10 +32,13 @@ contract ETHPriceFeed {
      */
     function getPrice() public view returns (int256) {
         (
-            /* uint80 roundID */,
-            int answer,
-            /*uint startedAt*/,
-            /*uint timeStamp*/,
+            /* uint80 roundID */
+            ,
+            int256 answer,
+            /*uint startedAt*/
+            ,
+            /*uint timeStamp*/
+            ,
             /*uint80 answeredInRound*/
         ) = dataFeed.latestRoundData();
         return answer;
@@ -45,14 +46,17 @@ contract ETHPriceFeed {
 
     function calPrice() public returns (int256) {
         (
-            /*uint80 roundID */,
-            int answer,
-            /*uint startedAt*/,
-            /*uint timeStamp*/,
+            /*uint80 roundID */
+            ,
+            int256 answer,
+            /*uint startedAt*/
+            ,
+            /*uint timeStamp*/
+            ,
             /*uint80 answeredInRound*/
         ) = dataFeed.latestRoundData();
         pricediff = ((startPrice - answer) / startPrice) * 100;
-        if(answer < 100 * (10**6)) {
+        if (answer < 100 * (10 ** 6)) {
             isBelow100USD = true;
         }
         return answer;

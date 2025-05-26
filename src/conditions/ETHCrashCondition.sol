@@ -11,17 +11,18 @@ contract ETHCrashCondition is IAzuranceCondition {
 
     constructor() {
         // fixed aggregator in sepolia chain
-        dataFeed = AggregatorV3Interface(
-            0x694AA1769357215DE4FAC081bf1f309aDC325306
-        );
+        dataFeed = AggregatorV3Interface(0x694AA1769357215DE4FAC081bf1f309aDC325306);
     }
 
     function getPrice() public view returns (int256) {
         (
-            /* uint80 roundID */,
+            /* uint80 roundID */
+            ,
             int256 answer,
-            /*uint startedAt*/,
-            /*uint timeStamp*/,
+            /*uint startedAt*/
+            ,
+            /*uint timeStamp*/
+            ,
             /*uint80 answeredInRound*/
         ) = dataFeed.latestRoundData();
         return answer;
@@ -29,12 +30,12 @@ contract ETHCrashCondition is IAzuranceCondition {
 
     function isEligible() public view returns (bool) {
         int256 price = getPrice();
-        return price < 2500 * (10**8);
+        return price < 2500 * (10 ** 8);
     }
 
     function checkUnlockClaim(address target) external override {
         require(msg.sender == target, "Only target can check itself");
-        if(isEligible()) {
+        if (isEligible()) {
             IAzurancePool(target).unlockClaim();
         }
     }

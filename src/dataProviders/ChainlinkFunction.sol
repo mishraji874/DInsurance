@@ -9,8 +9,7 @@ import {FunctionsRequest} from "@chainlink/contracts/src/v0.8/functions/v1_0_0/l
  * Request testnet LINK and ETH here: https://faucets.chain.link/
  * Find information on LINK Token Contracts and get the latest ETH and LINK faucets here: https://docs.chain.link/resources/link-token-contracts/
  */
-
-contract AzuranceFunctionsConsumer is FunctionsClient,ConfirmedOwner{
+contract AzuranceFunctionsConsumer is FunctionsClient, ConfirmedOwner {
     using FunctionsRequest for FunctionsRequest.Request;
 
     // State variables to store the last request ID, response, and error
@@ -22,40 +21,23 @@ contract AzuranceFunctionsConsumer is FunctionsClient,ConfirmedOwner{
     error UnexpectedRequestID(bytes32 requestId);
 
     // Event to log responses
-    event Response(
-        bytes32 indexed requestId,
-        string country,
-        bytes response,
-        bytes err
-    );
-
+    event Response(bytes32 indexed requestId, string country, bytes response, bytes err);
 
     // Check to get the router address for your supported network https://docs.chain.link/chainlink-functions/supported-networks
     address router = 0xb83E47C2bC239B3bf370bc41e1459A34b41238D0;
 
-    string source =
-        "const country = args[0];"
-        "const apiResponse = await Functions.makeHttpRequest({"
-        "url: `https://disease.sh/v3/covid-19/countries/${country}?strict=true`"
-        "});"
-        "if (apiResponse.error) {"
-        "throw Error(`Request failed`);"
-        "}"
-        "const { data } = apiResponse;"
-        "const percentage = (data.active/data.population) * 100 ;"
-        "if( percentage > 50 ){"
-        "return Functions.encodeString(`True`);"
-        "}else{"
-        "return Functions.encodeString(`False`);"
-        "}";
+    string source = "const country = args[0];" "const apiResponse = await Functions.makeHttpRequest({"
+        "url: `https://disease.sh/v3/covid-19/countries/${country}?strict=true`" "});" "if (apiResponse.error) {"
+        "throw Error(`Request failed`);" "}" "const { data } = apiResponse;"
+        "const percentage = (data.active/data.population) * 100 ;" "if( percentage > 50 ){"
+        "return Functions.encodeString(`True`);" "}else{" "return Functions.encodeString(`False`);" "}";
 
     //Callback gas limit
     uint32 gasLimit = 300000;
 
     // donID - Hardcoded for Mumbai
     // Check to get the donID for your supported network https://docs.chain.link/chainlink-functions/supported-networks
-    bytes32 donID =
-        0x66756e2d657468657265756d2d7365706f6c69612d3100000000000000000000;
+    bytes32 donID = 0x66756e2d657468657265756d2d7365706f6c69612d3100000000000000000000;
 
     /**
      * @notice Initializes the contract with the Chainlink router address and sets the contract owner
@@ -101,12 +83,7 @@ contract AzuranceFunctionsConsumer is FunctionsClient,ConfirmedOwner{
         if (args.length > 0) req.setArgs(args); // Set the arguments for the request
 
         // Send the request and store the request ID
-        s_lastRequestId = _sendRequest(
-            req.encodeCBOR(),
-            subscriptionId,
-            gasLimit,
-            donID
-        );
+        s_lastRequestId = _sendRequest(req.encodeCBOR(), subscriptionId, gasLimit, donID);
         listOfRequestIdxCountry[s_lastRequestId] = args[0];
         return s_lastRequestId;
     }
@@ -117,11 +94,7 @@ contract AzuranceFunctionsConsumer is FunctionsClient,ConfirmedOwner{
      * @param response The HTTP response data
      * @param err Any errors from the Functions request
      */
-    function fulfillRequest(
-        bytes32 requestId,
-        bytes memory response,
-        bytes memory err
-    ) internal override {
+    function fulfillRequest(bytes32 requestId, bytes memory response, bytes memory err) internal override {
         if (s_lastRequestId != requestId) {
             revert UnexpectedRequestID(requestId); // Check if request IDs match
         }

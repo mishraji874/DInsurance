@@ -9,11 +9,7 @@ interface ICovidFunction {
     error EmptyArgs();
     error EmptySource();
 
-    function handleOracleFulfillment(
-        bytes32 requestId,
-        bytes memory response,
-        bytes memory err
-    ) external;
+    function handleOracleFulfillment(bytes32 requestId, bytes memory response, bytes memory err) external;
 
     error NoInlineSecrets();
     error OnlyRouterCanFulfill();
@@ -21,16 +17,12 @@ interface ICovidFunction {
     function removeFromWhitelist(address _address) external;
 
     error UnexpectedRequestID(bytes32 requestId);
+
     event OwnershipTransferRequested(address indexed from, address indexed to);
     event OwnershipTransferred(address indexed from, address indexed to);
     event RequestFulfilled(bytes32 indexed id);
     event RequestSent(bytes32 indexed id);
-    event Response(
-        bytes32 indexed requestId,
-        string country,
-        bytes response,
-        bytes err
-    );
+    event Response(bytes32 indexed requestId, string country, bytes response, bytes err);
 
     function sendRequest(uint64 subscriptionId, string[] memory args) external returns (bytes32 requestId);
 

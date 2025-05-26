@@ -22,20 +22,16 @@ contract LendingLockCondition is IAzuranceCondition {
 
     // callCheckLendingStatus
     function callCheckLendingStatus() external {
-        fuji_ccip.sendMessagePayLINK(
-            destinationChainSelector,
-            receiver,
-            text
-        );
+        fuji_ccip.sendMessagePayLINK(destinationChainSelector, receiver, text);
     }
 
     function checkUnlockClaim(address target) external override {
         // isLendingDemo = true => lending is locked or paused
-        if(fuji_ccip.isLendingDemo()) {
+        if (fuji_ccip.isLendingDemo()) {
             IAzurancePool(target).unlockClaim();
         }
     }
-    
+
     function checkUnlockTerminate(address target) external override {
         IAzurancePool(target).unlockTerminate();
     }

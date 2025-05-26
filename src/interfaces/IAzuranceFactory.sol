@@ -2,7 +2,7 @@
 pragma solidity >=0.5.0;
 
 interface IAzuranceFactory {
-    function createAzuranceContract (
+    function createAzuranceContract(
         uint256 multiplier_,
         uint256 multiplierBlocks_,
         uint256 staleBlocks_,

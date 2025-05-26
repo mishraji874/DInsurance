@@ -8,7 +8,6 @@ import "../../src/AzurancePool.sol";
 import "../../src/interfaces/IAzuranceFactory.sol";
 
 contract DeployPool is Script {
-
     uint256 private _secondsPerBlock = 5; // 5 secs for 1 block
     uint256 private _staleTime = block.timestamp + 16 hours;
     uint256 private _maturityTime = block.timestamp + 1 days;
@@ -32,9 +31,10 @@ contract DeployPool is Script {
         string memory _name = "Covid Insurance";
         string memory _symbol = "COVID";
 
-        _factory.createAzuranceContract(_multiplier, _maturityBlock, _staleBlock, _asset, _fee, _feeTo, _condition, _name, _symbol);
+        _factory.createAzuranceContract(
+            _multiplier, _maturityBlock, _staleBlock, _asset, _fee, _feeTo, _condition, _name, _symbol
+        );
 
         vm.stopBroadcast();
     }
-
 }

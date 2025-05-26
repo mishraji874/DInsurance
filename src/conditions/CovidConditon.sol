@@ -20,54 +20,37 @@ contract CovidCondition is IAzuranceCondition, FunctionsClient, ConfirmedOwner {
 
     // donID - Hardcoded for sepolia
     // Check to get the donID for your supported network https://docs.chain.link/chainlink-functions/supported-networks
-    bytes32 donID =
-        0x66756e2d657468657265756d2d7365706f6c69612d3100000000000000000000;
+    bytes32 donID = 0x66756e2d657468657265756d2d7365706f6c69612d3100000000000000000000;
     uint32 gasLimit = 300000;
 
     uint64 subscriptionId;
     mapping(bytes32 => address) public requestTarget;
 
-    string source =
-        "const country = args[0];"
-        "const apiResponse = await Functions.makeHttpRequest({"
-        "url: `https://disease.sh/v3/covid-19/countries/${country}?strict=true`"
-        "});"
-        "if (apiResponse.error) {"
-        "throw Error(`Request failed`);"
-        "}"
-        "const { data } = apiResponse;"
+    string source = "const country = args[0];" "const apiResponse = await Functions.makeHttpRequest({"
+        "url: `https://disease.sh/v3/covid-19/countries/${country}?strict=true`" "});" "if (apiResponse.error) {"
+        "throw Error(`Request failed`);" "}" "const { data } = apiResponse;"
         "const percentage = Math.floor((data.active*Math.pow(10,18)/data.population));"
         "return Functions.encodeUint256(percentage);";
 
     error UnexpectedRequestID(bytes32 requestId);
 
-    event Response(
-        bytes32 indexed requestId,
-        address target,
-        bytes response,
-        bytes err
-    );
+    event Response(bytes32 indexed requestId, address target, bytes response, bytes err);
 
     constructor(uint64 subscriptionId_) FunctionsClient(router) ConfirmedOwner(msg.sender) {
         subscriptionId = subscriptionId_;
     }
-    
+
     function checkUnlockClaim(address target) external override {
         require(msg.sender == target, "The contract must check itselfs");
 
         FunctionsRequest.Request memory req;
-        req.initializeRequestForInlineJavaScript(source); 
+        req.initializeRequestForInlineJavaScript(source);
 
         string[] memory args = new string[](1);
         args[0] = "th";
         req.setArgs(args);
 
-        s_lastRequestId = _sendRequest(
-            req.encodeCBOR(),
-            subscriptionId,
-            gasLimit,
-            donID
-        );
+        s_lastRequestId = _sendRequest(req.encodeCBOR(), subscriptionId, gasLimit, donID);
 
         requestTarget[s_lastRequestId] = target;
     }
@@ -77,21 +60,17 @@ contract CovidCondition is IAzuranceCondition, FunctionsClient, ConfirmedOwner {
         IAzurancePool(target).unlockTerminate();
     }
 
-    function fulfillRequest(
-        bytes32 requestId,
-        bytes memory response,
-        bytes memory err
-    ) internal override {
+    function fulfillRequest(bytes32 requestId, bytes memory response, bytes memory err) internal override {
         if (s_lastRequestId != requestId) {
             revert UnexpectedRequestID(requestId);
         }
         s_lastResponse = response;
         s_lastError = err;
 
-        uint percentage = uint256(bytes32(response));
+        uint256 percentage = uint256(bytes32(response));
         address target = requestTarget[requestId];
 
-        if (percentage >= 30 * 10**18) {
+        if (percentage >= 30 * 10 ** 18) {
             IAzurancePool(target).unlockClaim();
         }
 
